@@ -58,31 +58,11 @@ class LockScreen:
             # Use solid black background instead
             self.root.configure(bg='black')
         
-        # Create lock interface container
-        container = tk.Frame(self.root, bg='black', bd=5)
+        # Create lock interface container (no background - transparent effect)
+        container = tk.Frame(self.root, bd=0, highlightthickness=0)
         container.place(relx=0.5, rely=0.5, anchor='center')
         
-        # Lock icon/title
-        title_label = tk.Label(
-            container,
-            text="🔒 SCREEN LOCKED 🔒",
-            font=('Arial', 32, 'bold'),
-            fg='white',
-			bg='black'
-        )
-        title_label.pack(pady=20)
-        
-        # Password label
-        pwd_label = tk.Label(
-            container,
-            text="Enter Password:",
-            font=('Arial', 16),
-            fg='white',
-            bg='black'
-        )
-        pwd_label.pack(pady=10)
-        
-        # Password entry
+        # Password entry (only element)
         self.password_entry = tk.Entry(
             container,
             show='●',
@@ -90,34 +70,11 @@ class LockScreen:
             width=25,
             justify='center'
         )
-        self.password_entry.pack(pady=10)
+        self.password_entry.pack()
         self.password_entry.focus()
         
         # Bind Enter key
         self.password_entry.bind('<Return>', self.check_password)
-        
-        # Unlock button
-        unlock_btn = tk.Button(
-            container,
-            text="Unlock",
-            command=self.check_password,
-            font=('Arial', 14),
-            bg='#2c3e50',
-            fg='white',
-            padx=30,
-            pady=10
-        )
-        unlock_btn.pack(pady=20)
-        
-        # Status label
-        self.status_label = tk.Label(
-            container,
-            text="",
-            font=('Arial', 12),
-            fg='red',
-            bg='black'
-        )
-        self.status_label.pack(pady=5)
         
         # Grab keyboard focus
         self.root.grab_set()
@@ -131,12 +88,9 @@ class LockScreen:
         entered = self.password_entry.get()
         
         if entered == PASSWORD:
-            self.status_label.config(text="✓ Unlocked!", fg='green')
             self.root.after(500, self.root.destroy)
         else:
-            self.status_label.config(text="✗ Incorrect password!", fg='red')
             self.password_entry.delete(0, tk.END)
-            self.root.after(2000, lambda: self.status_label.config(text=""))
     
     def run(self):
         """Start the lock screen"""
